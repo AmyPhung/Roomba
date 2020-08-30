@@ -9,8 +9,8 @@ arduino.write("SL+55A+100E")
 
 
 while True:
-    arduino.write("SL+50A+100E")
-    arduino.write("SL+53A+100E")
+    arduino.write("SL-20A+100E")
+    arduino.write("SL+33A-5E")
     # print(1)
 
     # print(2)
@@ -20,11 +20,10 @@ while True:
     # print(4)
     # data = arduino.readline()
     while arduino.in_waiting:
-        print("innerloop")
-        data = arduino.readline()
-        # print(5)
-        if data:
-            print data #strip out the new lines for now
+        # Display output from Arduino
+        print("[ARDUINO] %s" % arduino.readline().rstrip('\n')) # Remove newline
+        # if data:
+        #     print data #strip out the new lines for now
 
     # # print(2)
     # time.sleep(0.05)

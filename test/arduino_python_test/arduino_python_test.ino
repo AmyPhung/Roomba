@@ -40,46 +40,45 @@ void parseInput(int *buf, twistCmd *cmd) {
   // 2 = 50
   //  ...
 
-  
+  Serial.println("parsing input...");
   int i = 0;
   int lsign = 1;
   int asign = 1;
   int linear = 0;
   int angular = 0;
-  do {
-//    Serial.print(buf[i]);
-//    Serial.print(" ");
-
-    // Find an L to start reading linear cmd
-    if (buf[i] == 76) {
-      i++;
-      // Update sign of linear cmd
-      if (buf[i] == 45) {
-        lsign = -1;
-      }
-      i++;
-      // Update linear value until an A is found
-      do {
-        linear = linear*10 + (buf[i]-48);
-        i++;
-      } while (buf[i] != 65);
-//      Serial.println("Linear value:");
-      Serial.println(lsign * linear);
-    }
+  
+  // Find an L to start reading linear cmd
+  if (buf[i] == 76) {
     i++;
-  } while (buf[i] != 69);
-//  Serial.println();
-//  
-//  for (int i=0; i<arrSize; i++){
-//    if (buf[i] == 76) {
-//      
-//    }
-//
-//    
-//    Serial.print(buf[i]);
-//    Serial.print(" ");
-//  }
-//  Serial.println();
+    
+    // Update sign of linear cmd
+    if (buf[i] == 45) lsign = -1;
+    i++;
+    
+    // Update linear value until an A is found
+    do {
+      linear = linear*10 + (buf[i]-48);
+      i++;
+    } while (buf[i] != 65);
+    i++;
+    
+   // Update sign of angular cmd
+    if (buf[i] == 45) asign = -1;
+    i++;
+    
+    // Update angular value until an E is found
+    do {
+      angular = angular*10 + (buf[i]-48);
+      i++;
+    } while (buf[i] != 69);
+
+    
+    Serial.println("Linear value:");
+    Serial.println(lsign * linear);
+    Serial.println("Angular value:");
+    Serial.println(asign * angular);
+  }
+
 }
 
 int arrSize;
@@ -94,12 +93,14 @@ void loop() {
     Serial.println("reading...");
     readInput(ser_buf);
 
+    // For debugging ----
     arrSize = *(&ser_buf + 1) - ser_buf;
     for (int i=0; i<arrSize; i++) {
       Serial.print(ser_buf[i]);
       Serial.print(" ");
     }
     Serial.println(" ");
+    // ------------------
 
     parseInput(ser_buf, &cmd_vel);
   }
