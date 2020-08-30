@@ -87,7 +87,7 @@ void setup() {
   Serial.begin(115200);
 }
 void loop() {
-
+//  Serial.println("loop");
   // If new command is found (starting with S)
   if ((Serial.available() > 0) && (Serial.read() == 83)) {
     Serial.println("reading...");

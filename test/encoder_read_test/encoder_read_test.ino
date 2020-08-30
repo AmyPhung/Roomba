@@ -52,32 +52,40 @@ void setup() {
 }
 
 void loop() {
-//    Serial.println("updating sensors...");
+    Serial.println("updating sensors...");
     updateSensors();
     // stop if angle is greater than 360 degrees
-    if(abs(angle)>2*pi){
-      Roomba.write(173);
-      delay(100);
-    }
+//    if(abs(angle)>2*pi){
+//      Roomba.write(173);
+//      delay(100);
+//    }
 }
+
 
 void updateSensors() {
   // call for the left and right encoder counts
-  Roomba.write(byte(148));
-  Roomba.write(byte(2));
+  Roomba.write(byte(142));
+////  Roomba.write(byte(2));
   Roomba.write(byte(43));
-  Roomba.write(byte(44));
+//  Roomba.write(byte(44));
   delay(100);
 
   // load encoder counts into an array
   int i = 0;
   while(Roomba.available()) {
-    Serial.println("reading...");
+//    Serial.println("reading...");
     int c = Roomba.read();
 //    sensorbytes[i] = c;
 //    i++;
-    Serial.println(c);
+    
+    delay(100);
+    if (c != 19) {
+      Serial.println(c);
+    } else{
+      Serial.println("---");
+    }
   }
+//  delay(1000000);
 //  angle=((right_encoder*72*pi/508.8)-(left_encoder*72*pi/508.8))/235;
 //  Serial.println(angle);
 }
