@@ -40,5 +40,25 @@ From the `/src/main/` directory:
   + Grey: Pin 10
 + Roomba-side:
   + Black: Pin 6
-  + White: Pin 4 (TX)
-  + Grey: Pin 3 (RX)
+  + White: Pin 4 (Roomba TX)
+  + Grey: Pin 3 (Roomba RX)
+  + Purple: Pin (Device Detect)
+
+## Startup
++ Click and hold roomba "on" button until a series of tones play - this changes the baud rate from the default 115200 to 19200 (what we'll be using)
+
+
+
+## Notes
+
+
+https://cdn-shop.adafruit.com/datasheets/create_2_Open_Interface_Spec.pdf
+ Serial sequence: [137] [Velocity high byte] [Velocity low byte] [Radius high byte] [Radius low byte]
+ Available in modes: Safe or Full
+ Changes mode to: No Change
+ Velocity (-500 – 500 mm/s)
+ Radius (-2000 – 2000 mm)
+Special cases:
+Straight = 32768 or 32767 = 0x8000 or 0x7FFF
+Turn in place clockwise = -1 = 0xFFFF
+Turn in place counter-clockwise = 1 = 0x0001

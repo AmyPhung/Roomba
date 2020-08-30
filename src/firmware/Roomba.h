@@ -4,13 +4,17 @@
 #include <Arduino.h>
 #include <SoftwareSerial.h>
 
-class Roomba
-{
+#define WHEEL_DIST 0.234
+
+class Roomba {
   public:
     Roomba(SoftwareSerial * ss);
     void init();
-    void move(int velocity, int radius); // Velocity goes from -500 to 500, radius goes from -2000 to 2000
-    void updateSensors();
+    void radMove(int velocity, int radius); // Velocity goes from -500 to 500 (mm/s), radius goes from -2000 to 2000 (mm)
+    void wheelMove(int lcmd, int rcmd); // Velocity for each wheel goes from -500 to 500 (mm/s)
+    void twistMove(float linear, float angular); // Linear in units of m/s, angular in radians
+ 
+//    void updateSensors();
   private:
     SoftwareSerial * RoombaSerial;
 };
