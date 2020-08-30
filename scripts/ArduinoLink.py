@@ -14,7 +14,8 @@ class ArduinoLink:
         self.arduino = serial.Serial(port, baud)
 
         rospy.init_node('arduino_link')
-        self.twist_pub = rospy.Subscriber("/cmd_vel", Twist, self.twistCB)
+        self.twist_sub = rospy.Subscriber("/cmd_vel", Twist, self.twistCB)
+        self.twist_cmd = None
         self.update_rate = rospy.Rate(10)
 
     def _serializeTwist(self, twist_msg):
@@ -35,12 +36,15 @@ class ArduinoLink:
         return msg
 
     def twistCB(self, msg):
-        twist_cmd = self._serializeTwist(msg)
-        print(twist_cmd)
-        self.arduino.write(twist_cmd)
+        self.twist_cmd = self._serializeTwist(msg)
 
     def run(self):
         while not rospy.is_shutdown():
+            if self.twist_cmd:
+                print(self.twist_cmd)
+                self.arduino.write(self.twist_cmd)
+                self.twist_cmd = None # Reset to avoid duplicates
+
             while self.arduino.in_waiting:
                 # Display output from Arduino
                 print("[ARDUINO] %s" % self.arduino.readline().rstrip('\n'))

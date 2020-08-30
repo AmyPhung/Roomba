@@ -1,6 +1,9 @@
 # Roomba
 The household pet that picks up after itself
 
+## Repo Dependencies
++ Joystick node
+
 ## To upload code via command-line
 ### Setting up Arduino IDE
 1. Download Linux version of the [Arduino IDE](https://www.arduino.cc/en/main/software)

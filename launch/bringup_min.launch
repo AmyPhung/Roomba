@@ -1,0 +1,5 @@
+<launch>
+<!-- TODO: Create launch file for arduino, add baud and stuff as parameters -->
+  <include file="$(find roomba)/launch/teleop.launch"/>
+  <node pkg="roomba" type="ArduinoLink.py" name="arduino_link" output="screen"/>
+</launch>

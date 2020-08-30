@@ -3,6 +3,8 @@ project(roomba)
 
 find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
+  joy
   roscpp
   rospy
+  sensor_msgs
 )
