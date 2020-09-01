@@ -53,6 +53,12 @@ From the `/src/main/` directory:
 
 
 ## Notes
++ List usergroups: `groups $USER`
++ Create udev rules for kinect (based on https://forum.openframeworks.cc/t/solved-linux-kinect-1473-on-of9/22031/3 and https://elinux.org/Accessing_Devices_without_Sudo)
+    + `cd /etc/udev/rules.d`
+    + `sudo gedit 66-kinect.rules`
++ Update udev rules: `sudo udevadm trigger`
++ Kinect cannot be plugged into a USB hub
 
 
 https://cdn-shop.adafruit.com/datasheets/create_2_Open_Interface_Spec.pdf

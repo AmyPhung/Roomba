@@ -11,6 +11,8 @@ import rospy
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import Joy
 
+sign = lambda x: (1, -1)[x < 0]
+
 class Teleop:
     def __init__(self):
         rospy.init_node('teleop')
@@ -19,8 +21,8 @@ class Teleop:
         self.twist_pub = rospy.Publisher("/cmd_vel", Twist, queue_size=10)
 
     def joyCB(self, msg):
-        joy_lin = msg.axes[1] * 0.5 # scale by max linear velocity
-        joy_ang = msg.axes[0] * 4   # scale by max angular velocity
+        joy_lin = msg.axes[1] * 0.2 # scale by max linear velocity (0.5 max)
+        joy_ang = sign(joy_lin) * msg.axes[0] * 1   # scale by max angular velocity (4 max)
 
         cmd = Twist()
         cmd.linear.x = joy_lin

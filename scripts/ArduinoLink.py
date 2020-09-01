@@ -16,7 +16,7 @@ class ArduinoLink:
         rospy.init_node('arduino_link')
         self.twist_sub = rospy.Subscriber("/cmd_vel", Twist, self.twistCB)
         self.twist_cmd = None
-        self.update_rate = rospy.Rate(10)
+        self.update_rate = rospy.Rate(5)
 
     def _serializeTwist(self, twist_msg):
         if twist_msg.linear.x >= 0:

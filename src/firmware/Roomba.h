@@ -12,7 +12,7 @@ class Roomba {
     void init();
     void radMove(int velocity, int radius); // Velocity goes from -500 to 500 (mm/s), radius goes from -2000 to 2000 (mm)
     void wheelMove(int lcmd, int rcmd); // Velocity for each wheel goes from -500 to 500 (mm/s)
-    void twistMove(float linear, float angular); // Linear in units of m/s, angular in radians
+    void twistMove(int linear, int angular); // Linear in units of m/s*1000, angular in radians*1000
  
 //    void updateSensors();
   private:

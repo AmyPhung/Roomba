@@ -36,15 +36,26 @@ void Roomba::wheelMove(int lcmd, int rcmd) {
   RoombaSerial->write(lcmd);  
 }
 
-void Roomba::twistMove(float linear, float angular) {
-  clamp(linear, -0.5, 0.5); //cap max and min velocity in m/s
-  clamp(angular, -4, 4); //cap max and min velocity in rad/s
+void Roomba::twistMove(int linear, int angular) {
+  clamp(linear, -500, 500); //cap max and min velocity in m/s * 1000
+  clamp(angular, -4000, 4000); //cap max and min velocity in rad/s * 1000
+
+  Serial.println("Final Linear:");
+  Serial.println(linear);
+  float f_lin = (float)linear/1000.0;
+  float f_ang = (float)angular/1000.0;
+
+  Serial.println("Very FInal Linear:");
+  Serial.println(f_lin);
 
   // Compute wheel commands and rescale from meters to mm
-  int rcmd = (linear + (angular*WHEEL_DIST)/2) * 1000;
-  int lcmd  = (linear - (angular*WHEEL_DIST)/2) * 1000;
+  int rcmd = (f_lin + (f_ang*WHEEL_DIST)/2) * 1000;
+  int lcmd  = (f_lin - (f_ang*WHEEL_DIST)/2) * 1000;
   rcmd = clamp(rcmd, -500, 500); //cap max and min velocity in mm/s
   lcmd = clamp(lcmd, -500, 500); //cap max and min velocity in mm/s
+
+  Serial.println("Final cmds:");
+  Serial.println(rcmd);
   wheelMove(lcmd, rcmd);
 }
 
