@@ -73,7 +73,32 @@ Straight = 32768 or 32767 = 0x8000 or 0x7FFF
 Turn in place clockwise = -1 = 0xFFFF
 Turn in place counter-clockwise = 1 = 0x0001
 
+### Python to Arduino comms
+  // Parse serial input from Python and convert to twistCmd
+  // Data example 1: SL+100A+100E
+  // Data example 2: SL-45A+30E
+
+  // S = 83
+  // L = 76
+  // A = 65
+  // E = 69
+  // + = 43
+  // - = 45
+  // CR = 10
+
+  // 0 = 48
+  // 1 = 49
+  // 2 = 50
+  //  ...
+
+### Arduino to Python comms
+L_ENC
+//value
+R_ENC
+//value
+
 ## TODO
 + implement heartbeat & e-stopped state
++ Add robustness check for serial
 + create state controller
 + get vacuum to work

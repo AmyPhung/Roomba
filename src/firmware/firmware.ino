@@ -27,7 +27,7 @@ int last_sensor_update;
 
 void readInput(int *buf) {
   int i = 0;
-  
+
   // Save all chars until E is found
   do {
     if (Serial.available() > 0) {
@@ -50,7 +50,7 @@ void parseInput(int *buf, TwistMsg *cmd) {
   // + = 43
   // - = 45
   // CR = 10
-  
+
   // 0 = 48
   // 1 = 49
   // 2 = 50
@@ -62,33 +62,33 @@ void parseInput(int *buf, TwistMsg *cmd) {
   int asign = 1;
   int linear = 0;
   int angular = 0;
-  
+
   // Find an L to start reading linear cmd
   if (buf[i] == 76) {
     i++;
-    
+
     // Update sign of linear cmd
     if (buf[i] == 45) lsign = -1;
     i++;
-    
+
     // Update linear value until an A is found
     do {
       linear = linear*10 + (buf[i]-48);
       i++;
     } while (buf[i] != 65);
     i++;
-    
+
    // Update sign of angular cmd
     if (buf[i] == 45) asign = -1;
     i++;
-    
+
     // Update angular value until an E is found
     do {
       angular = angular*10 + (buf[i]-48);
       i++;
     } while (buf[i] != 69);
 
-    
+
     Serial.println("Linear value:");
     Serial.println(lsign * linear);
     Serial.println("Angular value:");
@@ -97,7 +97,12 @@ void parseInput(int *buf, TwistMsg *cmd) {
     cmd_vel.linear = (lsign * linear);
     cmd_vel.angular = (asign * angular);
   }
+}
 
+bool isValid(int linear, int angular) {
+  if (abs(linear) > 500) return false;
+  if (abs(angular) > 4000) return false;
+  return true;
 }
 
 void setup() {
@@ -124,7 +129,7 @@ void setup() {
 
   // Reset timers
   last_sensor_update = millis();
-  
+
 //  myRoomba.wheelMove(100,0);
 //  myRoomba.twistMove(0.2, 1);
 }
@@ -135,9 +140,9 @@ void loop() {
 //  myRoomba.updateStatusLights(activated);
 
 //  if (activated) {
-  
+
 //  Serial.println(cmd_vel);/
-  
+
 //  myRoomba.move(cmd_vel.linear, cmd_vel.angular);
 //  } else {
 //    cmd_vel.linear = 0;
@@ -147,6 +152,10 @@ void loop() {
   // Update sensors at regular interval
   if ((millis() - last_sensor_update) > sensor_update_rate) {
     myRoomba.updateSensors();
+    Serial.print("L_ENC");
+    Serial.println(myRoomba.l_enc);
+    Serial.print("R_ENC");
+    Serial.println(myRoomba.r_enc);
   }
 
   // If new command is found (starting with S)
@@ -164,6 +173,8 @@ void loop() {
     // ------------------
 
     parseInput(ser_buf, &cmd_vel);
-    myRoomba.twistMove(cmd_vel.linear, cmd_vel.angular);
+    if (isValid(cmd_vel.linear, cmd_vel.angular)) {
+      myRoomba.twistMove(cmd_vel.linear, cmd_vel.angular);
+    }
   }
 }

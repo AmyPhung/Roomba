@@ -3,6 +3,7 @@
 # ROS Imports
 import rospy
 from geometry_msgs.msg import Twist
+from std_msgs.msg import Int16
 
 # Python Imports
 import serial, time
@@ -16,6 +17,10 @@ class ArduinoLink:
         rospy.init_node('arduino_link')
         self.twist_sub = rospy.Subscriber("/cmd_vel", Twist, self.twistCB)
         self.twist_cmd = None
+
+        self.lwheel_pub = rospy.Publisher("/lwheel", Int16, queue_size=10)
+        self.rwheel_pub = rospy.Publisher("/rwheel", Int16, queue_size=10)
+
         self.update_rate = rospy.Rate(5)
 
     def _serializeTwist(self, twist_msg):
@@ -35,6 +40,18 @@ class ArduinoLink:
         msg = "SL" + lin_sign + lin_val + "A" + ang_sign + ang_val + "E"
         return msg
 
+    def _parseInput(self, input):
+
+        if input[0:5] == "L_ENC":
+            l_msg = Int16()
+            l_msg.data = int(input[5:])
+            self.lwheel_pub.publish(l_msg)
+
+        if input[0:5] == "R_ENC":
+            r_msg = Int16()
+            r_msg.data = int(input[5:])
+            self.rwheel_pub.publish(r_msg)
+
     def twistCB(self, msg):
         self.twist_cmd = self._serializeTwist(msg)
 
@@ -46,10 +63,19 @@ class ArduinoLink:
                 self.twist_cmd = None # Reset to avoid duplicates
 
             while self.arduino.in_waiting:
+                arduino_msg = self.arduino.readline().rstrip('\n')
+                self._parseInput(arduino_msg)
+
                 # Display output from Arduino
-                print("[ARDUINO] %s" % self.arduino.readline().rstrip('\n'))
+                print("[ARDUINO] %s" % arduino_msg)
             self.update_rate.sleep()
 
+#angle=((right_encoder*72*3.14/508.8)-(left_encoder*72*3.14/508.8))/235;
+#
+# // Convert to millimeters
+# // N counts * (mm in 1 wheel revolution / counts in 1 wheel revolution) = mm
+# r_enc = (right_encoder*72*3.14/508.8);
+# l_enc = (left_encoder*72*3.14/508.8);
 
 if __name__ == "__main__":
     al = ArduinoLink('/dev/ttyACM0', 115200)
