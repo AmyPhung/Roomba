@@ -14,7 +14,7 @@ class Roomba {
     void wheelMove(int lcmd, int rcmd); // Velocity for each wheel goes from -500 to 500 (mm/s)
     void twistMove(int linear, int angular); // Linear in units of m/s*1000, angular in radians*1000
  
-//    void updateSensors();
+    void updateSensors();
   private:
     SoftwareSerial * RoombaSerial;
 };

@@ -63,28 +63,28 @@ void Roomba::twistMove(int linear, int angular) {
 
 
 
-//
-//void Roomba::updateSensors() {
-//  RoombaSerial->write(byte(149)); // request encoder counts
-//  RoombaSerial->write(byte(2));
-//  RoombaSerial->write(byte(43));
-//  RoombaSerial->write(byte(44));
-//  delay(100); // wait for sensors
-//  int i=0;
-//
-//  char sensorbytes[100];
-//  int right_encoder;
-//  int left_encoder;
-//  float angle;
-//
-//  while(RoombaSerial->available()) {
-//    sensorbytes[i++] = RoombaSerial->read();  //read values into signed char array
-//  }
-//
-//  //merge upper and lower bytes
-//  right_encoder=(int)(sensorbytes[2] << 8)|(int)(sensorbytes[3]&0xFF);
-//  left_encoder=int((sensorbytes[0] << 8))|(int(sensorbytes[1])&0xFF);
-//
-//  angle=((right_encoder*72*3.14/508.8)-(left_encoder*72*3.14/508.8))/235;
-//  Serial.println (angle);
-//}
+
+void Roomba::updateSensors() {
+  RoombaSerial->write(byte(149)); // request encoder counts
+  RoombaSerial->write(byte(2));
+  RoombaSerial->write(byte(43));
+  RoombaSerial->write(byte(44));
+  delay(100); // wait for sensors
+  int i=0;
+
+  char sensorbytes[100];
+  int right_encoder;
+  int left_encoder;
+  float angle;
+
+  while(RoombaSerial->available()) {
+    sensorbytes[i++] = RoombaSerial->read();  //read values into signed char array
+  }
+
+  //merge upper and lower bytes
+  right_encoder=(int)(sensorbytes[2] << 8)|(int)(sensorbytes[3]&0xFF);
+  left_encoder=int((sensorbytes[0] << 8))|(int(sensorbytes[1])&0xFF);
+
+  angle=((right_encoder*72*3.14/508.8)-(left_encoder*72*3.14/508.8))/235;
+  Serial.println (angle);
+}

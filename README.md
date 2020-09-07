@@ -31,7 +31,7 @@ Based on instructions here: https://github.com/sudar/Arduino-Makefile
 3. Install PySerial `sudo apt-get install python-serial or sudo pip install pyserial`
 
 ### Uploading code
-From the `/src/main/` directory:
+From the `/src/firmwware/` directory:
 1. Compile code `make`
 2. Upload the Arduino code `make upload`
 
@@ -39,17 +39,18 @@ From the `/src/main/` directory:
 ## Pinout
 + Arduino-side:
   + Black: Ground
-  + White: Pin 11
-  + Grey: Pin 10
+  + White: Pin 3
+  + Grey: Pin 4
+  + Purple: Pin 5
 + Roomba-side:
   + Black: Pin 6
   + White: Pin 4 (Roomba TX)
   + Grey: Pin 3 (Roomba RX)
-  + Purple: Pin (Device Detect)
+  + Purple: Pin 5 (Device Detect)
 
 ## Startup
 + Click and hold roomba "on" button until a series of tones play - this changes the baud rate from the default 115200 to 19200 (what we'll be using)
-
++ `roslaunch roomba bringup_min.launch`
 
 
 ## Notes
@@ -71,3 +72,8 @@ Special cases:
 Straight = 32768 or 32767 = 0x8000 or 0x7FFF
 Turn in place clockwise = -1 = 0xFFFF
 Turn in place counter-clockwise = 1 = 0x0001
+
+## TODO
++ implement heartbeat & e-stopped state
++ create state controller
++ get vacuum to work

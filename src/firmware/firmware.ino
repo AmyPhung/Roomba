@@ -8,6 +8,7 @@
 int rxPin=3;
 int txPin=4;
 int ddPin=5; //device detect
+int sensor_update_rate = 1000; //in ms
 
 SoftwareSerial rSerial(rxPin,txPin);
 Roomba myRoomba(&rSerial);
@@ -22,6 +23,7 @@ TwistMsg cmd_vel;
 int incoming_byte = 0; // for incoming serial data
 int ser_buf[20];
 int arrSize;
+int last_sensor_update;
 
 void readInput(int *buf) {
   int i = 0;
@@ -119,6 +121,10 @@ void setup() {
 
   // Initialize Roomba
   myRoomba.init();
+
+  // Reset timers
+  last_sensor_update = millis();
+  
 //  myRoomba.wheelMove(100,0);
 //  myRoomba.twistMove(0.2, 1);
 }
@@ -138,7 +144,12 @@ void loop() {
 //    cmd_vel.angular = 0;
 //  }
 
-    // If new command is found (starting with S)
+  // Update sensors at regular interval
+  if ((millis() - last_sensor_update) > sensor_update_rate) {
+    myRoomba.updateSensors();
+  }
+
+  // If new command is found (starting with S)
   if ((Serial.available() > 0) && (Serial.read() == 83)) {
     Serial.println("reading...");
     readInput(ser_buf);
