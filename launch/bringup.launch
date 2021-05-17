@@ -1,0 +1,6 @@
+<launch>
+  <include file="$(find roomba)/launch/bringup_min.launch"/>
+
+  <node pkg="differential_drive"
+        type="diff_tf.py" name="diff_tf" />
+</launch>
